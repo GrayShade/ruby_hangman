@@ -16,9 +16,17 @@ class Game
     create_objects
     display_obj.show_menu
     choice = player_obj.input_choice
-    # choice = 1
-    game_result = play_game(choice) if choice == 1
-    end_game(game_result)
+    # choice = 0
+    case choice
+    when 1
+      game_result = play_game(choice)
+      end_game(game_result)
+    when 2
+      puts 'loaded...'
+    when 0
+      display_obj.show_replay_message
+      replay_or_quit(player_obj.input_replay_choice)
+    end
   end
 
   def create_objects
@@ -28,8 +36,8 @@ class Game
   end
 
   def play_game(choice)
-    # secret_word = create_secret_word if choice == 1
-    secret_word = 'afternoon'
+    secret_word = create_secret_word
+    # secret_word = 'afternoon'
     rem_turns = secret_word.length
     wrong_move_arr = []
     game_end = false
@@ -52,8 +60,7 @@ class Game
       file = File.open('dictionary.txt', 'r') do |f|
         f = f.read.split("\n") # split is used to remove new line chracter from each element which
         # read is adding
-        secret_word = f.select { |word| word.length >= 5 }.sample
-        # puts secret_word
+        secret_word = f.select { |word| word.length > 5 && word.length < 12 }.sample
       end
     end
     secret_word
@@ -82,15 +89,16 @@ class Game
   end
 
   def end_game(game_result)
+    secret_word = game_result[2]
     winner = check_winner(game_result)
-    display_obj.announce_winner(winner)
+    display_obj.announce_winner(winner, secret_word)
     display_obj.show_replay_message
-    replay_input = player_obj.input_replay_choice
+    replay_or_quit(player_obj.input_replay_choice)
   end
 
   def check_winner(game_result)
     winner = ''
-    # game_result is an array containing rem_turns, dashes_arr, wrong_move_arr
+    # game_result is an array containing rem_turns, dashes_arr, secret_word
     rem_turns = game_result[0]
     dashes_arr = game_result[1]
     secret_word = game_result[2]
@@ -102,8 +110,17 @@ class Game
     end
     winner
   end
+
+  def replay_or_quit(replay_choice)
+    if replay_choice == 'y'
+      # a multiplateform solution to clear terminal when opted for replaying game:
+      system('clear') || system('cls')
+      run_game # re-run game
+    else
+      exit # exit game
+    end
+  end
 end
 
 game_obj = Game.new
 game_obj.run_game
-

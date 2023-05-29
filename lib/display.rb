@@ -14,7 +14,7 @@ class Display
     puts 'Press 0 to quit game'
   end
 
-  def process_choice_output(choice, secret_word, dashes_arr)
+  def process_choice_output(choice, secret_word, _dashes_arr)
     # p input == '1'
     case choice
     when 1
@@ -23,7 +23,7 @@ class Display
       puts 'Computer player choosing a secret word...'
       print 'Secret Word: '
       self.dashes = 1..secret_word.length.times { print '_ ' }
-      puts "(#{secret_word})"
+      # puts "(#{secret_word})"
       puts
       # show_starting_display(secret_word.length)
     when 2
@@ -37,14 +37,14 @@ class Display
 
   # end
 
-  def display_turns(turn, secret_word, turn_result)
+  def display_turns(_turn, _secret_word, turn_result)
     print "\nSecret Word: "
     turn_result[1].each { |dash| print "#{dash} " }
     puts "\nChances Left: #{turn_result[0]} "
     puts "Wrong finds: #{turn_result[2].join('')}"
   end
 
-  def announce_winner(winner)
+  def announce_winner(winner, secret_word)
     if winner == 'human'
       puts "\nHuman player wins"
     else
