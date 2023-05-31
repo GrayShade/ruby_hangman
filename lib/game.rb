@@ -1,28 +1,42 @@
 # frozen_string_literal: false
 
+require 'yaml'
+
+require 'ostruct'
+require 'matrix'
+# require 'symbol'
+
 require_relative 'display'
 require_relative 'human_player'
 require_relative 'computer_logic'
 
 # This is main class of game & is abstracted from other classes
 class Game
-  attr_accessor :display_obj, :player_obj, :logic_obj
+  attr_accessor :display_obj, :player_obj, :logic_obj, :secret_word,
+                :rem_turns, :wrong_move_arr, :dashes_arr, :move, :turn_result
 
-  # :guessed_arr, :turns_remaining
-
-  def initialize; end
+  def initialize
+    # self.display_obj = Display.new
+    # self.player_obj = HumanPlayer.new
+    # self.logic_obj = ComputerLogic.new
+    # self.rem_turns = @rem_turns
+  end
 
   def run_game
     create_objects
     display_obj.show_menu
+    # choice = 2
     choice = player_obj.input_choice
-    # choice = 0
+
     case choice
     when 1
       game_result = play_game(choice)
       end_game(game_result)
     when 2
-      puts 'loaded...'
+      loaded = load_game
+      # loaded object is in array as first and only element, so using loaded[0] to access object:
+      game_result = loaded[0].play_game(choice = 2)
+      end_game(game_result)
     when 0
       display_obj.show_replay_message
       replay_or_quit(player_obj.input_replay_choice)
@@ -36,18 +50,23 @@ class Game
   end
 
   def play_game(choice)
-    secret_word = create_secret_word
-    # secret_word = 'afternoon'
-    rem_turns = secret_word.length
-    wrong_move_arr = []
-    game_end = false
-    dashes_arr = Array.new(secret_word.length.to_i, '_')
-    display_obj.process_choice_output(choice, secret_word, dashes_arr)
+    # below choice check is for preventing loaded games to have below instance variables from
+    # being re written:
+    if choice == 1
+      self.secret_word = create_secret_word
+      # self.secret_word = 'afternoon'
+      self.rem_turns = secret_word.length
+      self.wrong_move_arr = []
+      self.dashes_arr = Array.new(secret_word.length.to_i, '_')
+      display_obj.process_choice_output(choice, secret_word, dashes_arr)
+    end
 
+    display_obj.display_turns(move, secret_word, turn_result) if choice == 2
+    game_end = false
     while rem_turns >= 0 && game_end == false
-      turn_result = play_round(secret_word, rem_turns, wrong_move_arr, dashes_arr)
-      rem_turns = turn_result[0]
-      dashes_arr = turn_result[1]
+      self.turn_result = play_round
+      self.rem_turns = turn_result[0]
+      self.dashes_arr = turn_result[1]
       # print "#{dashes_arr.sort} #{secret_word.split('').sort}"
       game_end = true if rem_turns.zero? || dashes_arr.sort == secret_word.split('').sort
     end
@@ -55,60 +74,77 @@ class Game
   end
 
   def create_secret_word
-    secret_word = ''
+    self.secret_word = ''
     if File.exist?('dictionary.txt')
       file = File.open('dictionary.txt', 'r') do |f|
         f = f.read.split("\n") # split is used to remove new line chracter from each element which
         # read is adding
-        secret_word = f.select { |word| word.length > 5 && word.length < 12 }.sample
+        self.secret_word = f.select { |word| word.length > 5 && word.length < 12 }.sample
       end
     end
     secret_word
   end
 
-  def play_round(secret_word, rem_turns, wrong_move_arr, dashes_arr)
-    # puts "Make a turn: (s to save or 0 to quit)"
-    move = player_obj.input_turn_choice(wrong_move_arr, dashes_arr)
+  def play_round
+    self.move = player_obj.input_turn_choice(wrong_move_arr, dashes_arr)
+    # move = 's'
+    # if dashes_arr[0] == 'a'
+    #   move = 's'
+    #   else
+    #     move = 'a'
+    # end
+    save_or_quit if %(9 0).include? move
 
-    # move = 'o'
-    turn_result = process_turn(move, secret_word, rem_turns, wrong_move_arr, dashes_arr)
+    self.turn_result = process_turn
     display_obj.display_turns(move, secret_word, turn_result)
     turn_result
   end
 
-  def process_turn(move, secret_word, rem_turns, wrong_move_arr, dashes_arr)
+  def save_or_quit
+    case move
+    when '9'
+      Dir.mkdir('saves') unless Dir.exist? 'saves'
+      file = File.open('saves/yaml.yml', 'w') do |f|
+        f.puts(YAML.dump(self))
+        puts 'Thanks for playing...'
+        display_obj.show_replay_message
+        replay_or_quit(player_obj.input_replay_choice)
+      end
+    when '0'
+      display_obj.show_replay_message
+      replay_or_quit(player_obj.input_replay_choice)
+    end
+  end
+
+  def process_turn
     if secret_word.include?(move) && !dashes_arr.include?(move)
       secret_word.split('').each_with_index do |ele, idx|
-        dashes_arr[idx] = move if ele == move
+        self.dashes_arr[idx] = move if ele == move
       end
     else
-      rem_turns -= 1
+      self.rem_turns = rem_turns - 1
       wrong_move_arr.push move
     end
     [rem_turns, dashes_arr, wrong_move_arr]
   end
 
   def end_game(game_result)
-    secret_word = game_result[2]
+    self.secret_word = game_result[2]
     winner = check_winner(game_result)
     display_obj.announce_winner(winner, secret_word)
     display_obj.show_replay_message
     replay_or_quit(player_obj.input_replay_choice)
   end
 
-  def check_winner(game_result)
-    winner = ''
-    # game_result is an array containing rem_turns, dashes_arr, secret_word
-    rem_turns = game_result[0]
-    dashes_arr = game_result[1]
-    secret_word = game_result[2]
-    if rem_turns.positive? && dashes_arr.sort == secret_word.split('').sort # positive? returns true if greater than 0
-      winner = 'human'
+  def load_game
+    YAML.load_stream(File.read('saves/yaml.yml'))
+  end
 
-    else
-      winner = 'computer'
-    end
-    winner
+  def check_winner(game_result)
+    # game_result is an array containing rem_turns, dashes_arr & secret_word:
+    return 'human' if game_result[0].positive? && game_result[1].sort == game_result[2].split('').sort
+
+    'computer'
   end
 
   def replay_or_quit(replay_choice)
@@ -124,3 +160,5 @@ end
 
 game_obj = Game.new
 game_obj.run_game
+# content = YAML.load_file(File.read('saves/yaml.dump'))
+# puts content

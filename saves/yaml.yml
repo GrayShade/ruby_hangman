@@ -1,0 +1,27 @@
+--- !ruby/object:Game
+display_obj: !ruby/object:Display
+  dashes: !ruby/range
+    begin: 1
+    end: 8
+    excl: false
+player_obj: !ruby/object:HumanPlayer {}
+logic_obj: !ruby/object:ComputerLogic {}
+secret_word: whenever
+rem_turns: 6
+wrong_move_arr: &2
+- c
+- d
+dashes_arr: &1
+- _
+- _
+- e
+- _
+- e
+- _
+- e
+- _
+move: '9'
+turn_result:
+- 6
+- *1
+- *2

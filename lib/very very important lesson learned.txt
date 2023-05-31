@@ -1,0 +1,43 @@
+when using instance variables, remember to self.variable_name when assigning variables.
+i.e, 
+  self.name = 'neo'
+  above is acutually doing: (pardon any mistake)
+  def name=('neo')
+    name = 'neo'
+  end
+
+so that shorthand was actually synthetic sugar for a setter for assigning an instance variable a value. 
+Remember that instance variables need setters to assign values. 
+ Otherwise it will be 
+assigned to a local one instead of instance variable. Remember that there is a difference between two.
+Other very important thing is:
+
+i was doing like:
+
+  class SomeClass
+
+    attr_accessor :rem_turns
+    def process_turn(move, rem_turns)
+
+      self.rem_turns = rem_turns - 1
+      [rem_turns] # returning rem_turns
+    end
+
+  end
+
+now you can see that getters and setters for rem_turns are defined which means that we don't need to use @ 
+symbol with instance variables getters. variables above with self are setters and without them are actually
+ getters like:
+
+  def rem_turns
+    @rem_turns
+  end
+
+now back to example. We have two parameters in function. move & rem_turns. Those two are actually local
+variables and not getters. So [rem_turns] which s returning is also a local variable. setter is subtracting one
+from it and saving it but as we have mentioned above that there is difference between instance variables and
+local variables, So, subtracted value was not assigned to local variable & it was returning the same value which
+was before in function parameter too as it got that value from there & didnot change it.
+
+Also, If in same class or in another class an instance variable after loading is being shown as local but you have
+made it instance variable, chances are, in load file, it was not present as instance variable & you have done that later. 

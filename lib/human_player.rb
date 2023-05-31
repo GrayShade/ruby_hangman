@@ -16,10 +16,12 @@ class HumanPlayer
   end
 
   def input_turn_choice(wrong_move_arr, dashes_arr)
-    puts 'Make a turn: (s to save or 0 to quit)'
+    puts 'Make a turn: (9 to save or 0 to quit)'
     check = false
     while check == false
       turn = gets.chomp.strip.downcase
+      return turn if %('9' '0').include? turn
+
       if dashes_arr.include? turn
         puts "\n#{turn} already found as correct. Choose other:"
         next
