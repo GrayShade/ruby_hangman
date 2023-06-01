@@ -11,7 +11,7 @@ require_relative 'computer_logic'
 # This is main class of game & is abstracted from other classes
 class Game
   attr_accessor :display_obj, :player_obj, :logic_obj, :secret_word,
-                :rem_turns, :wrong_move_arr, :dashes_arr, :move, :turn_result
+                :rem_turns, :wrong_move_arr, :dashes_arr, :move, :turn_result_arr
 
   # :loaded
 
@@ -25,7 +25,7 @@ class Game
   def run_game
     create_objects
     display_obj.show_menu
-    # choice = 1
+    # choice = 2
     choice = player_obj.input_choice
 
     case choice
@@ -60,13 +60,13 @@ class Game
       self.dashes_arr = Array.new(secret_word.length.to_i, '_')
       display_obj.process_choice_output(choice, secret_word, dashes_arr)
     end
-
-    display_obj.display_turns(move, secret_word, turn_result) if choice == 2
+    self.turn_result_arr = [rem_turns, dashes_arr, wrong_move_arr]
+    display_obj.display_turns(move, secret_word, turn_result_arr) if choice == 2
     game_end = false
     while rem_turns >= 0 && game_end == false
-      self.turn_result = play_round
-      self.rem_turns = turn_result[0]
-      self.dashes_arr = turn_result[1]
+      self.turn_result_arr = play_round
+      self.rem_turns = turn_result_arr[0]
+      self.dashes_arr = turn_result_arr[1]
       # print "#{dashes_arr.sort} #{secret_word.split('').sort}"
       game_end = true if rem_turns.zero? || dashes_arr.sort == secret_word.split('').sort
     end
@@ -96,9 +96,9 @@ class Game
     # move = '9'
     save_or_quit if %(9 0).include? move
 
-    self.turn_result = process_turn
-    display_obj.display_turns(move, secret_word, turn_result)
-    turn_result
+    self.turn_result_arr = process_turn
+    display_obj.display_turns(move, secret_word, turn_result_arr)
+    turn_result_arr
   end
 
   def save_or_quit
