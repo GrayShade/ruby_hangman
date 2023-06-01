@@ -2,26 +2,18 @@
 display_obj: !ruby/object:Display
   dashes: !ruby/range
     begin: 1
-    end: 8
+    end: 6
     excl: false
 player_obj: !ruby/object:HumanPlayer {}
 logic_obj: !ruby/object:ComputerLogic {}
-secret_word: whenever
+secret_word: payday
 rem_turns: 6
-wrong_move_arr: &2
-- c
-- d
-dashes_arr: &1
+wrong_move_arr: []
+dashes_arr:
 - _
 - _
-- e
 - _
-- e
 - _
-- e
+- _
 - _
 move: '9'
-turn_result:
-- 6
-- *1
-- *2
