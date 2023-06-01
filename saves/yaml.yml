@@ -2,24 +2,26 @@
 display_obj: !ruby/object:Display
   dashes: !ruby/range
     begin: 1
-    end: 7
+    end: 8
     excl: false
 player_obj: !ruby/object:HumanPlayer {}
 logic_obj: !ruby/object:ComputerLogic {}
-secret_word: holiday
-rem_turns: 5
+secret_word: encoding
+rem_moves: 5
 wrong_move_arr: &2
-- r
-- e
+- f
+- h
+- t
 dashes_arr: &1
+- e
 - _
 - _
 - _
 - _
 - _
-- a
 - _
-turn_result_arr:
+- g
+move_result_arr:
 - 5
 - *1
 - *2

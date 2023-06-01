@@ -37,11 +37,11 @@ class Display
 
   # end
 
-  def display_turns(_turn, _secret_word, turn_result)
+  def display_turns(_turn, _secret_word, move_result_arr)
     print "\nSecret Word: "
-    turn_result[1].each { |dash| print "#{dash} " }
-    puts "\nChances Left: #{turn_result[0]} "
-    puts "Wrong finds: #{turn_result[2].join('')}"
+    move_result_arr[1].each { |dash| print "#{dash} " }
+    puts "\nChances Left: #{move_result_arr[0]} "
+    puts "Wrong finds: #{move_result_arr[2].join('')}"
   end
 
   def announce_winner(winner, secret_word)
