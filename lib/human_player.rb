@@ -16,7 +16,7 @@ class HumanPlayer
   end
 
   def input_turn_choice(wrong_move_arr, dashes_arr)
-    puts 'Make a turn: (9 to save or 0 to quit)'
+    puts "Make a turn :\t (9 => save game, 0 => quit)"
     check = false
     while check == false
       turn = gets.chomp.strip.downcase
@@ -43,7 +43,7 @@ class HumanPlayer
   def input_replay_choice
     choice = gets.chomp.strip.downcase
     until %(y n).include?(choice.downcase) && choice != '' # choice != '' prevents error on pressing enter key
-      puts 'Press Y to play again or N to quit:'
+      puts '(Press Y to play again or N to quit:)'
       choice = gets.chomp.strip.downcase
     end
     choice

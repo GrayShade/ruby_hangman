@@ -2,29 +2,27 @@
 display_obj: !ruby/object:Display
   dashes: !ruby/range
     begin: 1
-    end: 10
+    end: 9
     excl: false
 player_obj: !ruby/object:HumanPlayer {}
 logic_obj: !ruby/object:ComputerLogic {}
-secret_word: polyphonic
-rem_moves: 7
+fname: save.yml
+secret_word: retention
+rem_moves: 8
 wrong_move_arr: &2
-- e
-- s
-- a
+- q
 dashes_arr: &1
 - _
-- o
+- e
+- _
+- e
 - _
 - _
-- _
-- _
-- o
 - _
 - _
 - _
 move_result_arr:
-- 7
+- 8
 - *1
 - *2
 move: '9'
