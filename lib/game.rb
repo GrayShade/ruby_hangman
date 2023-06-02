@@ -19,7 +19,6 @@ class Game
     # p self.instance_variables
     display_obj.show_menu
     choice = player_obj.input_choice
-
     case choice
     when 1
       game_result_arr = play_game(choice)
@@ -63,7 +62,8 @@ class Game
       self.wrong_move_arr = []
       self.dashes_arr = Array.new(secrt_word.length.to_i, '_')
     end
-    display_obj.process_choice_output(choice, secrt_word, fname)
+    # fname below is for load game:
+    display_obj.process_choice_output(choice, secrt_word, rem_moves, fname)
 
     self.move_result_arr = [rem_moves, dashes_arr, wrong_move_arr]
     display_obj.display_turns(move_result_arr) if choice == 2
@@ -113,9 +113,7 @@ class Game
 
   def process_turn
     if secrt_word.include?(move) && !dashes_arr.include?(move)
-      secrt_word.split('').each_with_index do |ele, idx|
-        dashes_arr[idx] = move if ele == move
-      end
+      secrt_word.split('').each_with_index { |ele, idx| dashes_arr[idx] = move if ele == move }
     else
       self.rem_moves = rem_moves - 1
       wrong_move_arr << move

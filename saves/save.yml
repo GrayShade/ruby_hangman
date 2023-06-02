@@ -6,20 +6,25 @@ display_obj: !ruby/object:Display
     excl: false
 player_obj: !ruby/object:HumanPlayer {}
 logic_obj: !ruby/object:ComputerLogic {}
-secrt_word: enhance
-rem_moves: 6
+secrt_word: puzzles
+rem_moves: 1
 wrong_move_arr: &2
-- s
+- r
+- t
+- q
+- x
+- c
+- v
 dashes_arr: &1
+- p
+- u
+- z
+- z
+- l
 - e
 - _
-- _
-- a
-- _
-- _
-- e
 move_result_arr:
-- 6
+- 1
 - *1
 - *2
 move: '9'

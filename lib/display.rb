@@ -13,14 +13,16 @@ class Display
     puts 'Press 0 to quit game'
   end
 
-  def process_choice_output(choice, secrt_word, fname = '')
+  def process_choice_output(choice, secrt_word, rem_moves, fname = '')
     case choice
     when 1
       puts
       puts 'Game Started...'
       puts 'Computer player choosing a secret word...'
-      print "Secret Word:\t "
+      print "Secret Word  :\t "
       self.dashes = 1..secrt_word.length.times { print '_ ' }
+      print "\nChances Left :\t #{rem_moves}"
+
       puts
     when 2
       puts
@@ -31,10 +33,10 @@ class Display
   end
 
   def display_turns(move_result_arr)
-    print "\nSecret Word :\t "
+    print "\nSecret Word  :\t "
     move_result_arr[1].each { |dash| print "#{dash} " }
-    puts "\nChances Left:\t #{move_result_arr[0]} "
-    puts "Wrong finds :\t #{move_result_arr[2].join('')}"
+    puts "\nChances Left :\t #{move_result_arr[0]} "
+    puts "Wrong finds  :\t #{move_result_arr[2].join('')}"
   end
 
   def announce_winner(winner, secrt_word)

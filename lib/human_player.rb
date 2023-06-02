@@ -7,8 +7,9 @@ class HumanPlayer
   def input_choice
     puts "\nEnter your choice: "
     choice = gets.chomp.strip.downcase
-    # i think using %() makes a string instead of %w that makes an array:
-    until %(1 2 0).include?(choice) && choice != '' # choice != '' prevents error on pressing enter key
+    # Using %() makes a string not escapt quotes. So it will return true if input is a string & you check
+    # like %('9') == "'". So don't use it in validation checks
+    until %w[1 2 0].include?(choice) && choice != '' # choice != '' prevents error on pressing enter key
       puts 'Wrong choice!!! Try Again:'
       choice = gets.chomp.strip.downcase
     end
@@ -16,13 +17,14 @@ class HumanPlayer
   end
 
   def input_turn_choice(wrong_move_arr, dashes_arr)
-    puts "Make a turn :\t (9 => save game, 0 => quit)"
+    puts "Make a turn  :\t (9 => save game, 0 => quit)"
     check = false
     while check == false
       turn = gets.chomp.strip.downcase
-      return turn if %('9' '0').include? turn
+      # turn = 's'
+      return turn if %w[9 0].include?(turn) && !turn.empty?
 
-      if !('a'..'z').to_a.include?(turn) && turn.length != 1
+      if !('a'..'z').to_a.include?(turn) || turn.length != 1 || ('0'..'9').to_a.include?(turn.to_i)
         puts 'Wrong move!!! Try Again:'
         next
       elsif dashes_arr.include? turn
@@ -42,7 +44,7 @@ class HumanPlayer
 
   def input_replay_choice
     choice = gets.chomp.strip.downcase
-    until %(y n).include?(choice.downcase) && choice != '' # choice != '' prevents error on pressing enter key
+    until %w[y n].include?(choice.downcase) && choice != '' # choice != '' prevents error on pressing enter key
       puts '(Press Y to play again or N to quit:)'
       choice = gets.chomp.strip.downcase
     end
