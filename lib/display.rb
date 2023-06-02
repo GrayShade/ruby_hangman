@@ -13,7 +13,7 @@ class Display
     puts 'Press 0 to quit game'
   end
 
-  def process_choice_output(choice, secrt_word, rem_moves, fname = '')
+  def display_startng_choice_output(choice, secrt_word, rem_moves, fname = '')
     case choice
     when 1
       puts
@@ -32,7 +32,7 @@ class Display
     end
   end
 
-  def display_turns(move_result_arr)
+  def display_move_output(move_result_arr)
     print "\nSecret Word  :\t "
     move_result_arr[1].each { |dash| print "#{dash} " }
     puts "\nChances Left :\t #{move_result_arr[0]} "
@@ -46,7 +46,7 @@ class Display
       puts "\nComputer player wins"
       puts "Secret word was: #{secrt_word}"
     end
-    puts
+    # puts
   end
 
   def show_replay_message

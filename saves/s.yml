@@ -1,0 +1,28 @@
+--- !ruby/object:Game
+display_obj: !ruby/object:Display
+  dashes: !ruby/range
+    begin: 1
+    end: 10
+    excl: false
+player_obj: !ruby/object:HumanPlayer {}
+logic_obj: !ruby/object:ComputerLogic {}
+secrt_word: subsection
+rem_moves: 10
+wrong_move_arr: &2 []
+dashes_arr: &1
+- _
+- _
+- _
+- _
+- _
+- _
+- _
+- _
+- _
+- _
+move_result_arr:
+- 10
+- *1
+- *2
+move: '9'
+fname: s

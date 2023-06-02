@@ -18,7 +18,7 @@ class Game
     # to check which instance_variables belong to an object:
     # p self.instance_variables
     display_obj.show_menu
-    choice = player_obj.input_choice
+    choice = player_obj.input_starting_choice
     case choice
     when 1
       game_result_arr = play_game(choice)
@@ -51,7 +51,7 @@ class Game
     self.logic_obj = ComputerLogic.new
   end
 
-  def play_game(choice) 
+  def play_game(choice)
     # if game is loaded from save, then all self here are refering to loaded object & not
     # current object
     # below choice check is for preventing loaded games to prevent below instance variables from
@@ -63,10 +63,10 @@ class Game
       self.dashes_arr = Array.new(secrt_word.length.to_i, '_')
     end
     # fname below is for load game:
-    display_obj.process_choice_output(choice, secrt_word, rem_moves, fname)
+    display_obj.display_startng_choice_output(choice, secrt_word, rem_moves, fname)
 
     self.move_result_arr = [rem_moves, dashes_arr, wrong_move_arr]
-    display_obj.display_turns(move_result_arr) if choice == 2
+    display_obj.display_move_output(move_result_arr) if choice == 2
     game_end = false
     while rem_moves >= 0 && game_end == false
       self.move_result_arr = play_round
@@ -92,7 +92,7 @@ class Game
     self.move = player_obj.input_turn_choice(wrong_move_arr, dashes_arr)
     save_or_quit if %(9 0).include? move
     self.move_result_arr = process_turn
-    display_obj.display_turns(move_result_arr)
+    display_obj.display_move_output(move_result_arr)
     move_result_arr
   end
 
@@ -100,9 +100,10 @@ class Game
     case move
     when '9'
       Dir.mkdir('saves') unless Dir.exist? 'saves'
-      self.fname = 'save.yml' # Only one save allowed for now per game. Also prevents cheating.
-      File.open("saves/#{fname}", 'w') { |file| file.write(YAML.dump(self)) }
-      puts "\nGame saved as #{fname}"
+      # self.fname = 'save.yml' # Only one save allowed for now per game. Also prevents cheating.
+      self.fname = player_obj.input_file_name
+      File.open("saves/#{fname}.yml", 'w') { |file| file.write(YAML.dump(self)) }
+      puts "\nGame saved as #{fname}.yml"
       display_obj.show_replay_message
       replay_or_quit(player_obj.input_replay_choice)
     when '0'
@@ -131,11 +132,17 @@ class Game
   end
 
   def load_game
+    # self.fname = 'save.yml'
+    print "\nSaved files list:\n\n"
+    files_list = Dir.glob('**/*.yml', base: 'saves').map { |file| File.basename(file, '.*') }
+    puts files_list
+    # puts 'Enter file name:'
+    self.fname = player_obj.input_file_name
+    # p files_list.include?(fname)
     # YAML.unsafe_load_file('saves/yaml.yml')
     # if below line does not work, above can be used, though unsafe:
-    self.fname = 'save.yml'
-    YAML.safe_load_file("saves/#{fname}", aliases: true, permitted_classes: [Matrix, OpenStruct, Symbol, Game, Display,
-                                                                             HumanPlayer, ComputerLogic, Range])
+    YAML.safe_load_file("saves/#{fname}.yml", aliases: true, permitted_classes: [Matrix, OpenStruct, Symbol, Game, Display,
+                                                                                 HumanPlayer, ComputerLogic, Range])
   end
 
   def check_winner(game_result_arr)
@@ -146,7 +153,7 @@ class Game
   end
 
   def replay_or_quit(replay_choice)
-    exit if replay_choice != 'y' # exit game
+    exit if replay_choice == 'n' # exit game
     # a multiplateform solution to clear terminal when opted for replaying game:
     system('clear') || system('cls')
     # not creating the new object below because previous won't be deleted as code is stil
