@@ -4,12 +4,12 @@ require_relative 'utility_mod'
 
 # HumanPlayer class is for taking & cleansing inputs from human player
 class HumanPlayer
-  include Utility_mod
+  include UtilityMod
 
   def initialize; end
 
   def input_starting_choice
-    puts "\nEnter your choice: "
+    print "\n\nEnter your choice: "
     choice = gets.chomp.strip.downcase
     # Using %() makes a string not escapt quotes. So it will return true if input is a string & you check
     # like %('9') == "'".
@@ -21,20 +21,20 @@ class HumanPlayer
   end
 
   def input_move(wrong_move_arr, dashes_arr)
-    puts 'Make a move  :'
+    print "\nMake a move  :\t "
     check = false
     while check == false
       move = gets.chomp.strip.downcase
       return move if %w[9 0].include?(move) && !move.empty?
 
       if !('a'..'z').to_a.include?(move) || move.length != 1 || ('0'..'9').to_a.include?(move.to_i)
-        puts 'Only alphabets allowed!!! Try Again:'
+        print "\n\nOnly alphabets allowed!!!\nMake a move:\t "
         next
       elsif dashes_arr.include? move
-        puts "\nAlready found '#{move}' as correct. Make a move:"
+        print "\n\nAlready found '#{move}' as correct.\nMake a move:\t "
         next
       elsif wrong_move_arr.include? move
-        puts "\nAlready found '#{move}' as wrong. Make a move:"
+        print "\n\nAlready found '#{move}' as wrong.\nMake a move:\t "
         next
       end
       check = true
@@ -79,7 +79,7 @@ class HumanPlayer
 
       return choice unless files_list.include?(choice)
 
-      puts 'Overwrite existing file with same name?'
+      puts 'Overwrite existing file? (Press y or n):'
 
       ovrwrite_prmison = input_yes_no
     end

@@ -2,24 +2,27 @@
 display_obj: !ruby/object:Display
   dashes: !ruby/range
     begin: 1
-    end: 8
+    end: 6
     excl: false
 player_obj: !ruby/object:HumanPlayer {}
-secrt_word: finished
-rem_moves: 8
-wrong_move_arr: &2 []
+fname: s
+secrt_word: budget
+rem_moves: 1
+wrong_move_arr: &2
+- s
+- a
+- "y"
+- f
+- j
 dashes_arr: &1
 - _
 - _
-- _
-- _
-- _
+- d
 - _
 - e
 - _
 move_result_arr:
-- 8
+- 1
 - *1
 - *2
 move: '9'
-fname: s
