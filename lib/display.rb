@@ -18,6 +18,7 @@ class Display
     when 1
       puts
       puts 'Game Started...'
+      puts 'Press 9 to save game or 0 to quit...'
       puts 'Computer player choosing a secret word...'
       print "Secret Word  :\t "
       self.dashes = 1..secrt_word.length.times { print '_ ' }
@@ -27,6 +28,7 @@ class Display
     when 2
       puts
       puts "Game #{fname} loaded..."
+      puts 'Press 9 to save game or 0 to quit...'
     when 0
       show_quit_display
     end
@@ -41,9 +43,9 @@ class Display
 
   def announce_winner(winner, secrt_word)
     if winner == 'human'
-      puts "\nHuman player wins"
+      puts "\nYou Win!"
     else
-      puts "\nComputer player wins"
+      puts "\nComputer Wins!"
       puts "Secret word was: #{secrt_word}"
     end
     # puts

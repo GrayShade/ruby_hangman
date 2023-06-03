@@ -2,25 +2,27 @@
 display_obj: !ruby/object:Display
   dashes: !ruby/range
     begin: 1
-    end: 7
+    end: 9
     excl: false
 player_obj: !ruby/object:HumanPlayer {}
-secrt_word: circuit
-rem_moves: 5
+secrt_word: directors
+rem_moves: 7
 wrong_move_arr: &2
-- e
-- o
+- a
+- u
 dashes_arr: &1
 - _
+- i
+- _
+- e
 - _
 - _
 - _
-- u
 - _
 - _
 move_result_arr:
-- 5
+- 7
 - *1
 - *2
 move: '9'
-fname: latest
+fname: "y"

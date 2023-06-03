@@ -5,27 +5,23 @@ display_obj: !ruby/object:Display
     end: 7
     excl: false
 player_obj: !ruby/object:HumanPlayer {}
-logic_obj: !ruby/object:ComputerLogic {}
-secrt_word: puzzles
-rem_moves: 1
+secrt_word: circuit
+rem_moves: 4
 wrong_move_arr: &2
-- r
-- t
-- q
-- x
-- c
-- v
-dashes_arr: &1
-- p
-- u
-- z
-- z
-- l
 - e
+- o
+- "y"
+dashes_arr: &1
+- _
+- i
+- _
+- _
+- u
+- i
 - _
 move_result_arr:
-- 1
+- 4
 - *1
 - *2
 move: '9'
-fname: save.yml
+fname: sssssss

@@ -2,26 +2,26 @@
 display_obj: !ruby/object:Display
   dashes: !ruby/range
     begin: 1
-    end: 10
+    end: 9
     excl: false
 player_obj: !ruby/object:HumanPlayer {}
-logic_obj: !ruby/object:ComputerLogic {}
-secrt_word: subsection
-rem_moves: 10
-wrong_move_arr: &2 []
+secrt_word: directors
+rem_moves: 7
+wrong_move_arr: &2
+- a
+- u
 dashes_arr: &1
 - _
+- i
 - _
-- _
-- _
-- _
+- e
 - _
 - _
 - _
 - _
 - _
 move_result_arr:
-- 10
+- 7
 - *1
 - *2
 move: '9'

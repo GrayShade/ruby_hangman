@@ -1,15 +1,21 @@
 # frozen_string_literal: false
 
+# we require below three classes for safe_load_file
 require 'yaml'
 require 'matrix'
 require 'ostruct'
+require 'fileutils' # for using FileUtils.rm_rf
 
 require_relative 'display'
 require_relative 'human_player'
-require_relative 'computer_logic'
+
+require_relative 'utility_mod'
 
 # This is main class of game & is abstracted from other classes
 class Game
+
+  include Utility_mod
+
   attr_accessor :display_obj, :player_obj, :logic_obj, :secrt_word, :fname,
                 :rem_moves, :wrong_move_arr, :dashes_arr, :move, :move_result_arr
 
@@ -41,14 +47,13 @@ class Game
       end_game(loaded_obj.play_game(2))
     when 0
       display_obj.show_replay_message
-      replay_or_quit(player_obj.input_replay_choice)
+      replay_or_quit(player_obj.input_yes_no)
     end
   end
 
   def create_objects
     self.display_obj = Display.new
     self.player_obj = HumanPlayer.new
-    self.logic_obj = ComputerLogic.new
   end
 
   def play_game(choice)
@@ -100,15 +105,16 @@ class Game
     case move
     when '9'
       Dir.mkdir('saves') unless Dir.exist? 'saves'
-      # self.fname = 'save.yml' # Only one save allowed for now per game. Also prevents cheating.
-      self.fname = player_obj.input_file_name
+      # files_list = obtain_files_list.map.with_index { |file, idx| "#{idx + 1}) #{File.basename(file, '.*')}" }
+      # Only one save allowed for now per game. Also prevents cheating.
+      self.fname = player_obj.input_file_name('save')
       File.open("saves/#{fname}.yml", 'w') { |file| file.write(YAML.dump(self)) }
       puts "\nGame saved as #{fname}.yml"
       display_obj.show_replay_message
-      replay_or_quit(player_obj.input_replay_choice)
+      replay_or_quit(player_obj.input_yes_no)
     when '0'
       display_obj.show_replay_message
-      replay_or_quit(player_obj.input_replay_choice)
+      replay_or_quit(player_obj.input_yes_no)
     end
   end
 
@@ -128,21 +134,24 @@ class Game
     winner = check_winner(game_result_arr)
     display_obj.announce_winner(winner, game_result_arr[2])
     display_obj.show_replay_message
-    replay_or_quit(player_obj.input_replay_choice)
+    replay_or_quit(player_obj.input_yes_no)
   end
 
   def load_game
-    # self.fname = 'save.yml'
-    print "\nSaved files list:\n\n"
-    files_list = Dir.glob('**/*.yml', base: 'saves').map { |file| File.basename(file, '.*') }
+    print "\nSaved files list:\t(last modified order)\n\n"
+    # to number files & remove save directory, trailing extension from obtained file list:
+    files_list = obtain_files_list.map.with_index { |file, idx| "#{idx + 1}) #{File.basename(file, '.*')}" }
+    if files_list.count.zero?
+      print "No files to load...\n"
+      display_obj.show_replay_message
+      replay_or_quit(player_obj.input_yes_no)
+    end
     puts files_list
-    # puts 'Enter file name:'
-    self.fname = player_obj.input_file_name
-    # p files_list.include?(fname)
+    self.fname = player_obj.input_file_name('load')
     # YAML.unsafe_load_file('saves/yaml.yml')
     # if below line does not work, above can be used, though unsafe:
     YAML.safe_load_file("saves/#{fname}.yml", aliases: true, permitted_classes: [Matrix, OpenStruct, Symbol, Game, Display,
-                                                                                 HumanPlayer, ComputerLogic, Range])
+                                                                                 HumanPlayer, Range])
   end
 
   def check_winner(game_result_arr)
@@ -152,6 +161,7 @@ class Game
     'computer'
   end
 
+  # input validation ensures replay choice is y or n
   def replay_or_quit(replay_choice)
     exit if replay_choice == 'n' # exit game
     # a multiplateform solution to clear terminal when opted for replaying game:
