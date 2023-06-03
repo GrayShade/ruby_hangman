@@ -2,26 +2,23 @@
 display_obj: !ruby/object:Display
   dashes: !ruby/range
     begin: 1
-    end: 9
+    end: 8
     excl: false
 player_obj: !ruby/object:HumanPlayer {}
-secrt_word: directors
-rem_moves: 7
-wrong_move_arr: &2
-- a
-- u
+secrt_word: finished
+rem_moves: 8
+wrong_move_arr: &2 []
 dashes_arr: &1
 - _
-- i
+- _
+- _
+- _
+- _
 - _
 - e
 - _
-- _
-- _
-- _
-- _
 move_result_arr:
-- 7
+- 8
 - *1
 - *2
 move: '9'

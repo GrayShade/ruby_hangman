@@ -13,7 +13,6 @@ require_relative 'utility_mod'
 
 # This is main class of game & is abstracted from other classes
 class Game
-
   include Utility_mod
 
   attr_accessor :display_obj, :player_obj, :logic_obj, :secrt_word, :fname,
@@ -45,6 +44,14 @@ class Game
       # Only result of loaded_obj.play_game(2) contains previous object & outside of it, previous
       #  object does not exist. Result will be saved as game_result_arr.
       end_game(loaded_obj.play_game(2))
+
+    when 6
+      display_obj.display_startng_choice_output(6, '', '', '')
+      delete_request = player_obj.input_yes_no
+      process_delete_request if delete_request == 'y'
+      display_obj.show_replay_message
+      replay_or_quit(player_obj.input_yes_no)
+
     when 0
       display_obj.show_replay_message
       replay_or_quit(player_obj.input_yes_no)
@@ -94,7 +101,7 @@ class Game
   end
 
   def play_round
-    self.move = player_obj.input_turn_choice(wrong_move_arr, dashes_arr)
+    self.move = player_obj.input_move(wrong_move_arr, dashes_arr)
     save_or_quit if %(9 0).include? move
     self.move_result_arr = process_turn
     display_obj.display_move_output(move_result_arr)
@@ -170,6 +177,16 @@ class Game
     # running. This will retain unnessary objects as many times as game is loaded during same
     # program life cycle
     run_game # re-run game
+  end
+
+  def process_delete_request
+    FileUtils.rm_rf(Dir.glob('saves/*.yml'))
+    files_count = obtain_files_list.count
+    if files_count == 0
+      puts "\nAll files deleted"
+    else
+      puts "\nSome issue in deletion"
+    end
   end
 end
 

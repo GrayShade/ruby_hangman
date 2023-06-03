@@ -8,9 +8,10 @@ class Display
   def show_menu
     puts
     puts 'Welcome to Hangman Game...'
-    puts "\nPress 1 to Start Game"
-    puts 'Press 2 to load Game'
-    puts 'Press 0 to quit game'
+    puts "\nEnter 1 to Start Game"
+    puts 'Enter 2 to load Game'
+    puts 'Enter 6 to delete saved files'
+    puts 'Enter 0 to quit game'
   end
 
   def display_startng_choice_output(choice, secrt_word, rem_moves, fname = '')
@@ -18,7 +19,7 @@ class Display
     when 1
       puts
       puts 'Game Started...'
-      puts 'Press 9 to save game or 0 to quit...'
+      puts 'Enter 9 to save game or 0 to quit...'
       puts 'Computer player choosing a secret word...'
       print "Secret Word  :\t "
       self.dashes = 1..secrt_word.length.times { print '_ ' }
@@ -27,8 +28,13 @@ class Display
       puts
     when 2
       puts
-      puts "Game #{fname} loaded..."
-      puts 'Press 9 to save game or 0 to quit...'
+      puts "Game '#{fname}' loaded..."
+      puts 'Enter 9 to save game or 0 to quit...'
+    
+    when 6
+      puts
+      puts 'This will delete all saved games...'
+      puts "Are you sure?\t(Press y or n)"
     when 0
       show_quit_display
     end
@@ -53,6 +59,6 @@ class Display
 
   def show_replay_message
     puts "\nGame over. Replay?"
-    puts "Press Y to play again or N to quit:\n"
+    puts "Enter Y to play again or N to quit:\n"
   end
 end

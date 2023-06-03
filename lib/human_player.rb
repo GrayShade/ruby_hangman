@@ -13,14 +13,14 @@ class HumanPlayer
     choice = gets.chomp.strip.downcase
     # Using %() makes a string not escapt quotes. So it will return true if input is a string & you check
     # like %('9') == "'".
-    until %w[1 2 0].include?(choice) && choice != '' # choice != '' prevents error on pressing enter key
-      puts "\nWrong choice!!! Try Again:\t( Choose 1, 2 or 0 )"
+    until %w[1 2 6 0].include?(choice) && choice != '' # choice != '' prevents error on pressing enter key
+      puts "\nWrong choice!!! Try Again:\t( Choose 1, 2, 6 or 0 )"
       choice = gets.chomp.strip.downcase
     end
     choice.to_i
   end
 
-  def input_turn_choice(wrong_move_arr, dashes_arr)
+  def input_move(wrong_move_arr, dashes_arr)
     puts 'Make a move  :'
     check = false
     while check == false
@@ -28,16 +28,13 @@ class HumanPlayer
       return move if %w[9 0].include?(move) && !move.empty?
 
       if !('a'..'z').to_a.include?(move) || move.length != 1 || ('0'..'9').to_a.include?(move.to_i)
-        puts 'Wrong move!!! Try Again:'
+        puts 'Only alphabets allowed!!! Try Again:'
         next
       elsif dashes_arr.include? move
-        puts "\n#{move} already found as correct. Choose other:"
+        puts "\nAlready found '#{move}' as correct. Make a move:"
         next
       elsif wrong_move_arr.include? move
-        puts "\n#{move} already found as wrong. Choose other:"
-        next
-      elsif move == ''
-        puts 'here'
+        puts "\nAlready found '#{move}' as wrong. Make a move:"
         next
       end
       check = true
@@ -69,7 +66,10 @@ class HumanPlayer
       # to number files & remove save directory, trailing extension from file list:
       files_list = obtain_files_list.map { |file| File.basename(file, '.*') }
 
-      next if input_type == 'load' && !(files_list.include? choice)
+      if input_type == 'load' && !(files_list.include? choice)
+        print "\nNo such file exists!!!"
+        next
+      end
 
       # if its a load operation, return at at this point:
       return choice unless input_type == 'save'
